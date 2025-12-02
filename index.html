@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>Cyber Court</title>
+    
+    <link rel="icon" type="image/png" href="icons/icon-512x512.png">
+    <link rel="apple-touch-icon" href="icons/icon-512x512.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <div class="loading-text">სასამართლოს მომზადება...</div>
+    </div>
+
+    <div id="readyScreen" style="display:none;">
+        <div class="ready-content">
+            <div class="logo">
+                <h1>COURT</h1>
+                <p>Cyber Justice System</p>
+            </div>
+            <div class="scales-icon"><i class="fas fa-balance-scale"></i></div>
+            <p>სიმართლე არ არსებობს. არსებობს მხოლოდ კარგი არგუმენტი.</p>
+            <button class="btn im-ready" onclick="showMainPage()">
+                <i class="fas fa-gavel"></i> სხდომის გახსნა
+            </button>
+        </div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="container" id="mainContent" style="display:none;">
+        <div class="logo-area" id="logoArea">
+            <div class="logo"><h1>COURT</h1></div>
+        </div>
+
+        <div id="setupSection" class="section">
+            <div class="input-with-button">
+                <input type="text" id="playerName" placeholder="მოთამაშის სახელი" />
+                <button class="btn" onclick="addPlayer()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="player-list" id="playerList"></div>
+            
+            <div class="config-mini">
+                <label>სიტყვის დრო (წამი):</label>
+                <select id="timerConfig">
+                    <option value="30" selected>30 წამი</option>
+                    <option value="45">45 წამი</option>
+                    <option value="60">60 წამი</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="startGame()" style="margin-top:20px;">
+                <i class="fas fa-play"></i> პროცესის დაწყება
+            </button>
+        </div>
+
+        <div id="caseSection" class="section">
+            <div class="turn-header">საქმე N: <span id="caseNumber">001</span></div>
+            
+            <div class="role-display">
+                <div class="role-box prosecutor">
+                    <div class="role-label">პროკურორი</div>
+                    <div class="role-name" id="prosecutorName">...</div>
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="role-box defendant">
+                    <div class="role-label">ბრალდებული</div>
+                    <div class="role-name" id="defendantName">...</div>
+                </div>
+            </div>
+
+            <div class="crime-card">
+                <div class="crime-label">ბრალდება:</div>
+                <div class="crime-text" id="crimeText">...</div>
+            </div>
+
+            <button class="btn btn-red" onclick="startProsecution()">
+                <i class="fas fa-bullhorn"></i> პროკურორის სიტყვა
+            </button>
+        </div>
+
+        <div id="timerSection" class="section">
+            <div class="turn-header" id="timerSpeakerTitle">...</div>
+            
+            <div class="timer-container">
+                <div class="timer" id="timer">00:00</div>
+            </div>
+
+            <div id="timerControls">
+                </div>
+        </div>
+
+        <div id="votingSection" class="section">
+            <div class="turn-header">ნაფიცი მსაჯულები</div>
+            
+            <div id="juryTurnDisplay">
+                <p>ტელეფონი გადაეცი მსაჯულს:</p>
+                <h2 class="highlight-name" id="currentJurorName">...</h2>
+            </div>
+
+            <div id="votingControls" style="display:none;">
+                <p class="vote-prompt">თვლით თუ არა ბრალდებულს დამნაშავედ?</p>
+                <button class="btn btn-guilty" onclick="castVote('guilty')">
+                    <i class="fas fa-lock"></i> დამნაშავეა!
+                </button>
+                <button class="btn btn-innocent" onclick="castVote('innocent')">
+                    <i class="fas fa-dove"></i> უდანაშაულოა!
+                </button>
+            </div>
+
+            <button class="btn btn-gold" id="startVoteBtn" onclick="showVotingButtons()">
+                <i class="fas fa-fingerprint"></i> ხმის მიცემა
+            </button>
+        </div>
+
+        <div id="verdictSection" class="section">
+            <div class="result-title">განაჩენი</div>
+            
+            <div class="verdict-display" id="finalVerdict">...</div>
+            
+            <div class="vote-breakdown">
+                <div class="vote-stat guilty-stat">
+                    <span>დამნაშავე</span>
+                    <span id="guiltyCount">0</span>
+                </div>
+                <div class="vote-stat innocent-stat">
+                    <span>უდანაშაულო</span>
+                    <span id="innocentCount">0</span>
+                </div>
+            </div>
+
+            <div class="punishment-text" id="punishmentText"></div>
+
+            <div class="controls result-buttons">
+                <button class="btn btn-secondary" onclick="restartGame()">
+                    <i class="fas fa-redo"></i> ახალი საქმე
+                </button>
+                <button class="btn" onclick="showMainPage()">
+                    <i class="fas fa-home"></i> მთავარი
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+        }
+    </script>
+</body>
+</html>
